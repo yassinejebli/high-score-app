@@ -1,17 +1,22 @@
 import React from "react";
-import Button, { VARIANTS } from "./components/Button";
+import { createScore } from "./api";
+import Alert from "./components/Alert";
+import Button from "./components/Button";
 import Input from "./components/Input";
 import { Main, Score } from "./HighScoreApp.css";
+
+const MAX_NUMBER_OF_CLICKS = 10;
 
 function HighScoreApp() {
   const [score, setScore] = React.useState(0);
   const [clickCounter, setClickCounter] = React.useState(0);
   const [name, setName] = React.useState("");
-  // const [isSubmitting, setIsSubmitting] = React.useState(false);
-  // const [error, setError] = React.useState();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [error, setError] = React.useState("");
+  const reachedMaxNumberOfClicks = MAX_NUMBER_OF_CLICKS === clickCounter;
 
   const setScoreHandler = () => {
-    if (clickCounter > 9) {
+    if (reachedMaxNumberOfClicks) {
       setScore(0);
       setClickCounter(0);
       setName("");
@@ -19,7 +24,8 @@ function HighScoreApp() {
     }
 
     const random = Math.floor(Math.random() * (100 - -100 + 1) + -100);
-    setScore(random);
+    setScore(score + random);
+    // setScore(random);
     setClickCounter(clickCounter + 1);
   };
 
@@ -28,19 +34,39 @@ function HighScoreApp() {
   };
 
   const submitHandler = async () => {
-    const response = await fetch("http://dummy.com/endpoint", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ score, name, clickCounter }),
-    });
-    console.log({ response });
+    setError("");
+    if (!isFormValid()) {
+      setError("Please enter a name");
+      return;
+    }
+    try {
+      setIsSubmitting(true);
+      const response = await createScore({ score, name, clickCounter });
+      console.log({ response });
+    } catch (error) {
+      setError(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const isFormValid = () => {
+    return name && !/^\s*$/.test(name);
   };
 
   return (
     <Main>
+      {error && <Alert variant="error">{error}</Alert>}
+      {reachedMaxNumberOfClicks ? (
+        <Alert variant="warning">
+          You have reached the maximum number of clicks
+        </Alert>
+      ) : (
+        <Alert variant="info">
+          Clicks left: {MAX_NUMBER_OF_CLICKS - clickCounter}
+        </Alert>
+      )}
+
       <Score score={score}>{score}</Score>
       <Input
         width="300px"
@@ -48,12 +74,14 @@ function HighScoreApp() {
         type="text"
         value={name}
         onChange={setNameHandler}
-        error
+        // error
       />
       <Button variant="primary" onClick={setScoreHandler}>
         Set score
       </Button>
-      <Button onClick={submitHandler}>Submit</Button>
+      <Button disabled={isSubmitting} onClick={submitHandler}>
+        {isSubmitting ? "Submitting..." : "Submit"}
+      </Button>
     </Main>
   );
 }

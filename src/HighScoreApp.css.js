@@ -4,6 +4,7 @@ export const Main = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 24px;
 `;
 
 // if score < 0 red else green
