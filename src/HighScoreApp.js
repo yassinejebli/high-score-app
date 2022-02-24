@@ -1,5 +1,5 @@
 import React from "react";
-import { Main } from "./HighScoreApp.css";
+import { Main, TableWrapper } from "./HighScoreApp.css";
 import { getScores } from "./api";
 import Form from "./containers/form/Form";
 import Leaderboard from "./containers/leader-board/Leaderboard";
@@ -7,13 +7,13 @@ import Button from "./components/Button";
 
 function HighScoreApp() {
   const [scoresData, setScoresData] = React.useState({});
+  const [isFetchingData, setIsFetchingData] = React.useState(false);
   const [sortingField, setSortingField] = React.useState("totalPoints");
   const top10Scores = React.useMemo(
     () =>
       Object.entries(scoresData)
         .map(([_, value]) => ({
           ...value,
-          // maybe it's better to memoize this calculation by caching the results
           avgScorePerClick: value.totalPoints / value.clicks,
         }))
         .sort((a, b) => b[sortingField] - a[sortingField])
@@ -23,9 +23,12 @@ function HighScoreApp() {
 
   // For faster updates, I used object/map (map[<name>]: {{<clicks>, <totalPoints>...}}), name as a key
   React.useEffect(() => {
-    getScores().then((data) =>
-      setScoresData(data.reduce((a, v) => ({ ...a, [v.name]: v }), {}))
-    );
+    setIsFetchingData(true);
+    getScores()
+      .then((data) =>
+        setScoresData(data.reduce((a, v) => ({ ...a, [v.name]: v }), {}))
+      )
+      .finally(() => setIsFetchingData(false));
   }, []);
 
   const addScoreHandler = React.useCallback(
@@ -45,7 +48,7 @@ function HighScoreApp() {
   return (
     <Main>
       <Form addScore={addScoreHandler} />
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <TableWrapper>
         <Button
           onClick={() =>
             setSortingField(
@@ -56,11 +59,15 @@ function HighScoreApp() {
           }
         >
           {sortingField === "totalPoints"
-            ? "Sort by Average points per click"
-            : "Sort by points"}
+            ? "Click here to sort by average points per click"
+            : "Click here to sort by points"}
         </Button>
-        <Leaderboard top10Scores={top10Scores} />
-      </div>
+        {!isFetchingData ? (
+          <Leaderboard top10Scores={top10Scores} />
+        ) : (
+          <div>Loading...</div>
+        )}
+      </TableWrapper>
     </Main>
   );
 }

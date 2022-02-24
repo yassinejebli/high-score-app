@@ -2,7 +2,6 @@ import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 export default styled.button`
-  font-size: 0.875rem;
   padding: 8px;
   border-radius: 4px;
   outline: none;

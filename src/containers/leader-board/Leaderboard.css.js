@@ -1,11 +1,9 @@
 import styled from "@emotion/styled";
 
-export const Wrapper = styled.div`
-  margin-left: 24px;
-`;
-
 export const Table = styled.table`
   width: 100%;
+  max-width: 100%;
+  overflow-x: scroll;
   border-collapse: collapse;
   & th {
     padding-bottom: 10px;
@@ -24,5 +22,12 @@ export const Table = styled.table`
 
   & tbody tr:hover {
     background-color: rgb(243, 243, 243);
+  }
+
+  @media (max-width: 768px) {
+    & td,
+    & th {
+      padding: 4px;
+    }
   }
 `;

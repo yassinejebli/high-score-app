@@ -2,7 +2,6 @@ import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 export default styled.div`
-  font-size: 0.875rem;
   padding: 8px;
   width: 100%;
   border-radius: 4px;

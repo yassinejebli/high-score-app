@@ -1,11 +1,12 @@
+/** @jsxImportSource @emotion/react */
 import React from "react";
+import { css } from "@emotion/react";
 import Alert from "../../components/Alert";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import { Flex, Score, Wrapper } from "./Form.css";
 
 const MAX_NUMBER_OF_CLICKS = 10;
-// const IS_DEV = false;
 const IS_DEV = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
 
 export default function Form({ addScore }) {
@@ -57,15 +58,27 @@ export default function Form({ addScore }) {
     }
   };
 
+  // TODO: Show success message when the score is saved successfully
+
   return (
     <Wrapper>
       {error && (
-        <Alert style={{ marginBottom: 4 }} variant="error">
+        <Alert
+          css={css`
+            margin-bottom: 4px;
+          `}
+          variant="error"
+        >
           {error}
         </Alert>
       )}
       {reachedMaxNumberOfClicks ? (
-        <Alert style={{ marginBottom: 4 }} variant="warning">
+        <Alert
+          css={css`
+            margin-bottom: 4px;
+          `}
+          variant="warning"
+        >
           You have reached the maximum number of clicks
         </Alert>
       ) : (
@@ -86,24 +99,26 @@ export default function Form({ addScore }) {
         </Score>
       </Flex>
       <label htmlFor="name">Name</label>
-      <br />
-      <Input
-        id="name"
-        width="300px"
-        placeholder="Enter a name here..."
-        type="text"
-        value={name}
-        onChange={setNameHandler}
-        // error
-      />
-      <Button
-        variant="primary"
-        disabled={isSubmitting || !isNameEntered}
-        onClick={submitHandler}
-        style={{ marginLeft: 4 }}
-      >
-        {isSubmitting ? "Submitting..." : "Send it!"}
-      </Button>
+      <div>
+        <Input
+          id="name"
+          placeholder="Enter a name here..."
+          type="text"
+          value={name}
+          onChange={setNameHandler}
+          // error
+        />
+        <Button
+          variant="primary"
+          disabled={isSubmitting || !isNameEntered}
+          onClick={submitHandler}
+          css={css`
+            margin-top: 8px;
+          `}
+        >
+          {isSubmitting ? "Submitting..." : "Send it!"}
+        </Button>
+      </div>
     </Wrapper>
   );
 }
