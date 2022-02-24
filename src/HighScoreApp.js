@@ -1,87 +1,47 @@
 import React from "react";
-import { createScore } from "./api";
-import Alert from "./components/Alert";
-import Button from "./components/Button";
-import Input from "./components/Input";
-import { Main, Score } from "./HighScoreApp.css";
-
-const MAX_NUMBER_OF_CLICKS = 10;
+import { Main } from "./HighScoreApp.css";
+import { getScores } from "./api";
+import Form from "./containers/form/Form";
+import Leaderboard from "./containers/leader-board/Leaderboard";
 
 function HighScoreApp() {
-  const [score, setScore] = React.useState(0);
-  const [clickCounter, setClickCounter] = React.useState(0);
-  const [name, setName] = React.useState("");
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [error, setError] = React.useState("");
-  const reachedMaxNumberOfClicks = MAX_NUMBER_OF_CLICKS === clickCounter;
+  const [scoresData, setScoresData] = React.useState({});
 
-  const setScoreHandler = () => {
-    if (reachedMaxNumberOfClicks) {
-      setScore(0);
-      setClickCounter(0);
-      setName("");
-      return;
-    }
+  // useMemo has not effect here because setScoresData is the only trigger for the re-rendering of this component
+  const top10Scores = React.useMemo(
+    () =>
+      Object.entries(scoresData)
+        .sort(([_, a], [__, b]) => b.totalPoints - a.totalPoints)
+        .slice(0, 10)
+        .map(([_, value]) => value),
+    [scoresData]
+  );
 
-    const random = Math.floor(Math.random() * (100 - -100 + 1) + -100);
-    setScore(score + random);
-    // setScore(random);
-    setClickCounter(clickCounter + 1);
-  };
+  // For faster updates, I used object/map (map[<name>]: {{<clicks>, <totalPoints>...}}), name as a key
+  React.useEffect(() => {
+    getScores().then((data) =>
+      setScoresData(data.reduce((a, v) => ({ ...a, [v.name]: v }), {}))
+    );
+  }, []);
 
-  const setNameHandler = ({ target: { value } }) => {
-    setName(value);
-  };
-
-  const submitHandler = async () => {
-    setError("");
-    if (!isFormValid()) {
-      setError("Please enter a name");
-      return;
-    }
-    try {
-      setIsSubmitting(true);
-      const response = await createScore({ score, name, clickCounter });
-      console.log({ response });
-    } catch (error) {
-      setError(error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const isFormValid = () => {
-    return name && !/^\s*$/.test(name);
-  };
+  const addScoreHandler = React.useCallback(
+    (data) => {
+      if (scoresData[data.name]) {
+        const newScoresData = { ...scoresData };
+        newScoresData[data.name].totalPoints += data.totalPoints;
+        newScoresData[data.name].clicks += data.clicks;
+        setScoresData(newScoresData);
+      } else {
+        setScoresData({ ...scoresData, [data.name]: data });
+      }
+    },
+    [scoresData]
+  );
 
   return (
     <Main>
-      {error && <Alert variant="error">{error}</Alert>}
-      {reachedMaxNumberOfClicks ? (
-        <Alert variant="warning">
-          You have reached the maximum number of clicks
-        </Alert>
-      ) : (
-        <Alert variant="info">
-          Clicks left: {MAX_NUMBER_OF_CLICKS - clickCounter}
-        </Alert>
-      )}
-
-      <Score score={score}>{score}</Score>
-      <Input
-        width="300px"
-        placeholder="Enter a name here..."
-        type="text"
-        value={name}
-        onChange={setNameHandler}
-        // error
-      />
-      <Button variant="primary" onClick={setScoreHandler}>
-        Set score
-      </Button>
-      <Button disabled={isSubmitting} onClick={submitHandler}>
-        {isSubmitting ? "Submitting..." : "Submit"}
-      </Button>
+      <Form addScore={addScoreHandler} />
+      <Leaderboard top10Scores={top10Scores} />
     </Main>
   );
 }

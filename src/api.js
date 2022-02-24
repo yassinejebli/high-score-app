@@ -1,4 +1,4 @@
-const END_POINT = "./dummy-endpoint";
+const END_POINT = "./dummy-data.json";
 
 export function createScore(scoreData) {
   return fetch(END_POINT, {
