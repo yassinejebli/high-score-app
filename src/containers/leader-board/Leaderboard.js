@@ -1,8 +1,10 @@
 /** @jsxImportSource @emotion/react */
+import React from "react";
 import { css } from "@emotion/react";
 import { Table } from "./Leaderboard.css";
+import isEqual from "lodash/isEqual";
 
-export default function LeaderBoard({ top10Scores }) {
+function Leaderboard({ top10Scores }) {
   const isEmptyArray = top10Scores.length === 0;
   return (
     <Table>
@@ -78,3 +80,8 @@ export default function LeaderBoard({ top10Scores }) {
     </Table>
   );
 }
+
+// Re-render Leaderboard table only when top10Scores is updated
+export default React.memo(Leaderboard, (prevProps, nextProps) => {
+  return isEqual(prevProps, nextProps);
+});

@@ -72,6 +72,7 @@ export default function Form({ addScore }) {
           {error}
         </Alert>
       )}
+      {/* Will reset on development mode */}
       {reachedMaxNumberOfClicks ? (
         <Alert
           css={css`
