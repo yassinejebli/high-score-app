@@ -9,7 +9,7 @@ import { Flex, Score, Wrapper } from "./Form.css";
 const MAX_NUMBER_OF_CLICKS = 10;
 const IS_DEV = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
 
-export default function Form({ addScore }) {
+function Form({ addScore }) {
   const [score, setScore] = React.useState(0);
   const [clickCounter, setClickCounter] = React.useState(0);
   const [name, setName] = React.useState("");
@@ -123,3 +123,5 @@ export default function Form({ addScore }) {
     </Wrapper>
   );
 }
+
+export default React.memo(Form);
