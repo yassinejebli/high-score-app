@@ -81,7 +81,9 @@ export default function Form({ addScore }) {
         >
           Set score
         </Button>
-        <Score score={score}>{score}</Score>
+        <Score data-testid="score" score={score}>
+          {score}
+        </Score>
       </Flex>
       <label htmlFor="name">Name</label>
       <br />

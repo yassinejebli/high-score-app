@@ -9,9 +9,9 @@ export default function LeaderBoard({ top10Scores }) {
           <tr>
             <th>Position</th>
             <th>Name</th>
-            <th style={{ textAlign: "right" }}>Score</th>
+            <th style={{ textAlign: "right" }}>Points</th>
             <th style={{ textAlign: "right" }}>Clicks</th>
-            <th style={{ textAlign: "right" }}>Average score/click</th>
+            <th style={{ textAlign: "right" }}>Average points/click</th>
           </tr>
         </thead>
         <tbody>
@@ -21,7 +21,9 @@ export default function LeaderBoard({ top10Scores }) {
               <td>{score.name}</td>
               <td style={{ textAlign: "right" }}>{score.totalPoints}</td>
               <td style={{ textAlign: "right" }}>{score.clicks}</td>
-              <td style={{ textAlign: "right" }}></td>
+              <td style={{ textAlign: "right" }}>
+                {score.avgScorePerClick.toFixed(2)}
+              </td>
             </tr>
           ))}
         </tbody>

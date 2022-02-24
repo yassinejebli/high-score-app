@@ -3,18 +3,22 @@ import { Main } from "./HighScoreApp.css";
 import { getScores } from "./api";
 import Form from "./containers/form/Form";
 import Leaderboard from "./containers/leader-board/Leaderboard";
+import Button from "./components/Button";
 
 function HighScoreApp() {
   const [scoresData, setScoresData] = React.useState({});
-
-  // useMemo has not effect here because setScoresData is the only trigger for the re-rendering of this component
+  const [sortingField, setSortingField] = React.useState("totalPoints");
   const top10Scores = React.useMemo(
     () =>
       Object.entries(scoresData)
-        .sort(([_, a], [__, b]) => b.totalPoints - a.totalPoints)
-        .slice(0, 10)
-        .map(([_, value]) => value),
-    [scoresData]
+        .map(([_, value]) => ({
+          ...value,
+          // maybe it's better to memoize this calculation by caching the results
+          avgScorePerClick: value.totalPoints / value.clicks,
+        }))
+        .sort((a, b) => b[sortingField] - a[sortingField])
+        .slice(0, 10),
+    [scoresData, sortingField]
   );
 
   // For faster updates, I used object/map (map[<name>]: {{<clicks>, <totalPoints>...}}), name as a key
@@ -41,7 +45,22 @@ function HighScoreApp() {
   return (
     <Main>
       <Form addScore={addScoreHandler} />
-      <Leaderboard top10Scores={top10Scores} />
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <Button
+          onClick={() =>
+            setSortingField(
+              sortingField === "totalPoints"
+                ? "avgScorePerClick"
+                : "totalPoints"
+            )
+          }
+        >
+          {sortingField === "totalPoints"
+            ? "Sort by Average points per click"
+            : "Sort by points"}
+        </Button>
+        <Leaderboard top10Scores={top10Scores} />
+      </div>
     </Main>
   );
 }
