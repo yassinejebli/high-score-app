@@ -82,11 +82,12 @@ function Form({ addScore }) {
               margin-bottom: 4px;
             `}
             variant="warning"
+            data-cy="warning"
           >
             You have reached the maximum number of clicks
           </Alert>
         ) : (
-          <Alert variant="info">
+          <Alert data-cy="clicks-counter" variant="info">
             Clicks left: {MAX_NUMBER_OF_CLICKS - clickCounter}
           </Alert>
         )}
@@ -95,6 +96,7 @@ function Form({ addScore }) {
           <Button
             disabled={reachedMaxNumberOfClicks && !IS_DEV}
             onClick={setScoreHandler}
+            data-cy="set-score"
           >
             Set score
           </Button>
