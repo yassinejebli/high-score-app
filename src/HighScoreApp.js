@@ -4,21 +4,24 @@ import { getScores } from "./api";
 import Form from "./containers/form/Form";
 import Leaderboard from "./containers/leader-board/Leaderboard";
 import Button from "./components/Button";
+import divide from "lodash/divide";
+import orderBy from "lodash/orderBy";
 
 function HighScoreApp() {
   const [scoresData, setScoresData] = React.useState({});
   const [isFetchingData, setIsFetchingData] = React.useState(false);
-  const [sortingField, setSortingField] = React.useState("totalPoints");
+  const [isSortingByAvg, setIsSortingByAvg] = React.useState(false);
   const top10Scores = React.useMemo(
     () =>
-      Object.entries(scoresData)
-        .map(([_, value]) => ({
+      orderBy(
+        Object.entries(scoresData).map(([_, value]) => ({
           ...value,
-          avgScorePerClick: value.totalPoints / value.clicks,
-        }))
-        .sort((a, b) => b[sortingField] - a[sortingField])
-        .slice(0, 10),
-    [scoresData, sortingField]
+          avgScorePerClick: divide(value.totalPoints, value.clicks),
+        })),
+        (o) => o[isSortingByAvg ? "avgScorePerClick" : "totalPoints"],
+        "desc"
+      ).slice(0, 10),
+    [scoresData, isSortingByAvg]
   );
 
   // For faster updates, I used object/map (map[<name>]: {{<clicks>, <totalPoints>...}}), name as a key
@@ -49,18 +52,10 @@ function HighScoreApp() {
     <Main>
       <Form addScore={addScoreHandler} />
       <TableWrapper>
-        <Button
-          onClick={() =>
-            setSortingField(
-              sortingField === "totalPoints"
-                ? "avgScorePerClick"
-                : "totalPoints"
-            )
-          }
-        >
-          {sortingField === "totalPoints"
-            ? "Click here to sort by average points per click"
-            : "Click here to sort by points"}
+        <Button onClick={() => setIsSortingByAvg(!isSortingByAvg)}>
+          {isSortingByAvg
+            ? "Click here to sort by points"
+            : "Click here to sort by average points per click"}
         </Button>
         {!isFetchingData ? (
           <Leaderboard top10Scores={top10Scores} />
