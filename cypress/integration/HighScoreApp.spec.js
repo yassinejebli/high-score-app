@@ -1,6 +1,6 @@
 describe("HighScoreApp", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000");
+    cy.visit("/");
   });
   it("Set score button decreases number of clicks left", () => {
     cy.get("[data-cy=clicks-counter]").contains("Clicks left: 10");
