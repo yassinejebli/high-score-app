@@ -1,10 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import React from "react";
 import { css } from "@emotion/react";
+import { Flex, Score, Wrapper } from "./Form.css";
 import Alert from "../../components/Alert";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
-import { Flex, Score, Wrapper } from "./Form.css";
+import { getRandomNumber } from "./helpers";
 
 const MAX_NUMBER_OF_CLICKS = 10;
 const IS_DEV = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
@@ -25,7 +26,7 @@ function Form({ addScore }) {
       return;
     }
 
-    const random = Math.floor(Math.random() * (100 - -100 + 1) + -100);
+    const random = getRandomNumber(-100, 100);
     setScore(random);
     setClickCounter(clickCounter + 1);
   };
@@ -77,13 +78,7 @@ function Form({ addScore }) {
         )}
         {/* Will reset on development mode */}
         {reachedMaxNumberOfClicks ? (
-          <Alert
-            css={css`
-              margin-bottom: 4px;
-            `}
-            variant="warning"
-            data-cy="warning"
-          >
+          <Alert variant="warning" data-cy="warning">
             You have reached the maximum number of clicks
           </Alert>
         ) : (
