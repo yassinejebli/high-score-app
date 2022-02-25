@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import Card from "../../components/Card";
 
 export const Wrapper = styled(Card)`
-  width: 50%;
+  width: 500px;
   flex-direction: column;
   display: flex;
   align-items: center;

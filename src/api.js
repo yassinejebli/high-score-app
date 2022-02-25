@@ -1,4 +1,6 @@
-const END_POINT = "./dummy-data.json";
+import api from "./config/api";
+
+const END_POINT = api.API_URL || "./dummy-data.json";
 
 export function createScore(scoreData) {
   return fetch(END_POINT, {

@@ -18,7 +18,8 @@ function Form({ addScore }) {
   const reachedMaxNumberOfClicks = MAX_NUMBER_OF_CLICKS === clickCounter;
   const isNameEntered = name && !/^\s*$/.test(name);
 
-  const setScoreHandler = () => {
+  const setScoreHandler = (e) => {
+    e.preventDefault();
     if (reachedMaxNumberOfClicks && IS_DEV) {
       setClickCounter(0);
       return;
@@ -37,7 +38,8 @@ function Form({ addScore }) {
     // }
   };
 
-  const submitHandler = () => {
+  const submitHandler = (e) => {
+    e.preventDefault();
     try {
       setIsSubmitting(true);
       const payload = {
@@ -61,66 +63,69 @@ function Form({ addScore }) {
   // TODO: Show success message when the score is saved successfully
 
   return (
-    <Wrapper>
-      {error && (
-        <Alert
-          css={css`
-            margin-bottom: 4px;
-          `}
-          variant="error"
-        >
-          {error}
-        </Alert>
-      )}
-      {/* Will reset on development mode */}
-      {reachedMaxNumberOfClicks ? (
-        <Alert
-          css={css`
-            margin-bottom: 4px;
-          `}
-          variant="warning"
-        >
-          You have reached the maximum number of clicks
-        </Alert>
-      ) : (
-        <Alert variant="info">
-          Clicks left: {MAX_NUMBER_OF_CLICKS - clickCounter}
-        </Alert>
-      )}
+    <form onSubmit={submitHandler}>
+      <Wrapper>
+        {error && (
+          <Alert
+            css={css`
+              margin-bottom: 4px;
+            `}
+            variant="error"
+          >
+            {error}
+          </Alert>
+        )}
+        {/* Will reset on development mode */}
+        {reachedMaxNumberOfClicks ? (
+          <Alert
+            css={css`
+              margin-bottom: 4px;
+            `}
+            variant="warning"
+          >
+            You have reached the maximum number of clicks
+          </Alert>
+        ) : (
+          <Alert variant="info">
+            Clicks left: {MAX_NUMBER_OF_CLICKS - clickCounter}
+          </Alert>
+        )}
 
-      <Flex>
-        <Button
-          disabled={reachedMaxNumberOfClicks && !IS_DEV}
-          onClick={setScoreHandler}
-        >
-          Set score
-        </Button>
-        <Score data-testid="score" score={score}>
-          {score}
-        </Score>
-      </Flex>
-      <label htmlFor="name">Name</label>
-      <div>
-        <Input
-          id="name"
-          placeholder="Enter a name here..."
-          type="text"
-          value={name}
-          onChange={setNameHandler}
-          // error
-        />
-        <Button
-          variant="primary"
-          disabled={isSubmitting || !isNameEntered}
-          onClick={submitHandler}
-          css={css`
-            margin-top: 8px;
-          `}
-        >
-          {isSubmitting ? "Submitting..." : "Send it!"}
-        </Button>
-      </div>
-    </Wrapper>
+        <Flex>
+          <Button
+            disabled={reachedMaxNumberOfClicks && !IS_DEV}
+            onClick={setScoreHandler}
+          >
+            Set score
+          </Button>
+          <Score data-testid="score" score={score}>
+            {score}
+          </Score>
+        </Flex>
+        <label htmlFor="name">Name</label>
+        <div>
+          <Input
+            id="name"
+            placeholder="Enter a name here..."
+            type="text"
+            value={name}
+            onChange={setNameHandler}
+            // error
+          />
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={isSubmitting || !isNameEntered}
+            onClick={submitHandler}
+            css={css`
+              margin-top: 8px;
+            `}
+          >
+            {isSubmitting ? "Submitting..." : "Send it!"}
+          </Button>
+        </div>
+      </Wrapper>
+    </form>
   );
 }
 
