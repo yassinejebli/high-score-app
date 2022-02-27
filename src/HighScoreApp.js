@@ -60,7 +60,7 @@ function HighScoreApp() {
             : "Click here to sort by average points per click"}
         </Button>
         {!isFetchingData ? (
-          <Leaderboard scoresData={scoresData} top10Scores={top10Scores} />
+          <Leaderboard top10Scores={top10Scores} />
         ) : (
           <div>Loading...</div>
         )}

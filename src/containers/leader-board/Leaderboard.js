@@ -4,11 +4,9 @@ import { css } from "@emotion/react";
 import { Table } from "./Leaderboard.css";
 import isEqual from "lodash/isEqual";
 
-function Leaderboard({ top10Scores, scoresData }) {
+function Leaderboard({ top10Scores }) {
   const isEmptyArray = top10Scores.length === 0;
-  // console.log({
-  //   getPositionByScore: getPositionByScore.cache,
-  // });
+
   return (
     <Table>
       <thead>
