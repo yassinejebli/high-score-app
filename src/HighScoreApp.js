@@ -4,6 +4,7 @@ import { getScores } from "./api";
 import Form from "./containers/form/Form";
 import Leaderboard from "./containers/leader-board/Leaderboard";
 import Button from "./components/Button";
+import { getPositionByScore } from "./helpers";
 import divide from "lodash/divide";
 import orderBy from "lodash/orderBy";
 
@@ -17,6 +18,7 @@ function HighScoreApp() {
         Object.entries(scoresData).map(([_, value]) => ({
           ...value,
           avgScorePerClick: divide(value.totalPoints, value.clicks),
+          position: getPositionByScore(value.name, Object.values(scoresData)),
         })),
         (o) => o[isSortingByAvg ? "avgScorePerClick" : "totalPoints"],
         "desc"
@@ -58,7 +60,7 @@ function HighScoreApp() {
             : "Click here to sort by average points per click"}
         </Button>
         {!isFetchingData ? (
-          <Leaderboard top10Scores={top10Scores} />
+          <Leaderboard scoresData={scoresData} top10Scores={top10Scores} />
         ) : (
           <div>Loading...</div>
         )}

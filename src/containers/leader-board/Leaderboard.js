@@ -3,9 +3,8 @@ import React from "react";
 import { css } from "@emotion/react";
 import { Table } from "./Leaderboard.css";
 import isEqual from "lodash/isEqual";
-import { getPositionByScore } from "./helpers";
 
-function Leaderboard({ top10Scores }) {
+function Leaderboard({ top10Scores, scoresData }) {
   const isEmptyArray = top10Scores.length === 0;
   // console.log({
   //   getPositionByScore: getPositionByScore.cache,
@@ -43,7 +42,7 @@ function Leaderboard({ top10Scores }) {
         {!isEmptyArray ? (
           top10Scores.map((score) => (
             <tr key={score.name}>
-              <td>{getPositionByScore(score.name, top10Scores)}</td>
+              <td>{score.position}</td>
               <td>{score.name}</td>
               <td
                 css={css`
