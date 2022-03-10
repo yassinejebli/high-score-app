@@ -1,14 +1,14 @@
 [
   { "name": "Jane Doe", "totalPoints": 157, "clicks": 5 },
-  { "name": "Lily Allen", "totalPoints": 234, "clicks": 8 },
-  { "name": "John Smith", "totalPoints": 390, "clicks": 10 },
+  { "name": "Lily Allen", "totalPoints": 300, "clicks": 5 },
+  { "name": "John Smith", "totalPoints": 200, "clicks": 3 },
   { "name": "David Cortez", "totalPoints": 101, "clicks": 3 },
   { "name": "Allan Moon", "totalPoints": 102, "clicks": 5 },
   { "name": "Chara Cold", "totalPoints": 120, "clicks": 4 },
-  { "name": "Arya Lana", "totalPoints": 230, "clicks": 7 },
+  { "name": "Arya Lana", "totalPoints": 300, "clicks": 8 },
   { "name": "Monli Taki", "totalPoints": 118, "clicks": 9 },
   { "name": "Aldis Nura", "totalPoints": 400, "clicks": 8 },
   { "name": "Rami Van", "totalPoints": 92, "clicks": 7 },
   { "name": "Dainis Veski", "totalPoints": 80, "clicks": 4 },
-  { "name": "Anna Doskina", "totalPoints": 300, "clicks": 8 }
+  { "name": "Anna Doskina", "totalPoints": 250, "clicks": 8 }
 ]
